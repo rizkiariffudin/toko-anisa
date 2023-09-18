@@ -7,6 +7,7 @@ from django.http import HttpResponse
 from django.core import serializers
 from main.models import Item  # Import your Product model
 
+# Ubah show_main
 def show_main(request):
     products = Item.objects.all()
 
@@ -14,11 +15,12 @@ def show_main(request):
         'name': 'Rizki Ariffudin', # Nama kamu
         'class': 'PBP E', # Kelas PBP kamu
         'products': products,
-        'total_items': len(products)
+        'total_items': len(products) # Untuk BONUS
     }
 
     return render(request, "main.html", context)
 
+# Fungsi baru
 def create_product(request):
     form = ProductForm(request.POST or None)
 
