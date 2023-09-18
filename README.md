@@ -248,3 +248,331 @@ class mainTest(TestCase):
         self.assertEqual(retrieved_model.amount, 15)
         self.assertEqual(retrieved_model.description, "Pisang coklat")
 ```
+
+# Tugas 3: Implementasi Form dan Data Delivery pada Django
+## Membuat input ```form``` untuk menambahkan objek model pada app sebelumnya.
+1. Menyalakan _virtual environment_ menggunakan command prompt pada direktori dengan perintah ```env\Scripts\activate.bat```
+2. Sebelum membuat input form, kita harus membuat suatu _skeleton_ yang berfungsi sebagai kerangka views dari web yang kita buat. Tujuan dari pembuatan kerangka ini adalah untuk menghindari redundansi kode dan mempertahankan konsistensi desain web kita. Berikut akan dijelaskan cara membuat _skeleton_.
+3. Buat folder `templates` di folder utama atau terluar (toko_anisa). Lalu buat berkas HTML bernama `base.html` yang berfungsi sebagai _template_ dasar untuk halaman web lainnya di dalam proyek. Masukan kode berikut ke `base.html`
+```html
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1.0"
+        />
+        {% block meta %}
+        {% endblock meta %}
+    </head>
+
+    <body>
+        {% block content %}
+        {% endblock content %}
+    </body>
+</html>
+```
+4. Buka `settings.py` yang ada di subdirektori `toko_anisa` lalu tambahkan kode berikut pada baris `TEMPLATES` agar `base.html` dapat terdeteksi.
+```html
+...
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'], # Tambahkan kode ini
+        'APP_DIRS': True,
+        ...
+    }
+]
+...
+```
+5. Buka berkas `main.html` yang ada di direktori `main/templates` dan ubah isinya menjadi kode berikut.
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Shopping List Page</h1>
+
+    <h5>Name:</h5>
+    <p>{{name}}</p>
+
+    <h5>Class:</h5>
+    <p>{{class}}</p>
+{% endblock content %}
+```
+6. Step 5 adalah akhir dari pembuatan _skeleton_. Selanjutnya untuk membuat input form, pertama-tama buat berkas baru di direktori `main` dengan nama `forms.py` untuk membuat struktur form yang menerima data produk baru. Isi berkas dengan kode berikut.
+```python
+from django.forms import ModelForm
+from main.models import Product
+
+class ProductForm(ModelForm):
+    class Meta:
+        model = Item
+        fields = ["name", "Amount", "description"]
+```
+7. Buka `views.py` di direktori `main` lalu tambahkan beberapa _import_ dan fungsi `create_product` serta ubah fungsi `show_main`. Sehingga isi dari berkas adalah sebagai berikut.
+```python
+from django.shortcuts import render
+from django.http import HttpResponseRedirect
+from main.forms import ProductForm
+from django.urls import reverse
+from main.forms import Item
+from main.models import Item  # Import your Product model
+
+# Ubah show_main
+def show_main(request):
+    products = Item.objects.all()
+
+    context = {
+        'name': 'Rizki Ariffudin', # Nama kamu
+        'class': 'PBP E', # Kelas PBP kamu
+        'products': products,
+        'total_items': len(products) # Untuk BONUS, membaca total items di database yang sudah disimpan 
+    }
+
+    return render(request, "main.html", context)
+
+# Fungsi baru
+def create_product(request):
+    form = ProductForm(request.POST or None)
+
+    if form.is_valid() and request.method == "POST":
+        form.save()
+        return HttpResponseRedirect(reverse('main:show_main'))
+
+    context = {'form': form}
+    return render(request, "create_product.html", context)
+```
+8. Buka `urls.py` di direktori `main` import fungsi `create_product` yang dibuat dan tambahkan _path url_ ke `urlpatterns`. Berikut kode yang perlu ditambahkan.
+```python
+from main.views import show_main, create_product # import fungsi create_product
+
+...
+
+path('create-product', create_product, name='create_product'), # tambahkan ke urlpatterns
+```
+9. Buat berkas HTML baru dengan nama `create_product.html` di direktori `main/templates`. Isi berkas dengan kode berikut.
+```html
+{% extends 'base.html' %} 
+
+{% block content %}
+<h1>Add New Product</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <table>
+        {{ form.as_table }}
+        <tr>
+            <td></td>
+            <td>
+                <input type="submit" value="Add Product"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+{% endblock %}
+```
+10. Buka `main.html` tambahkan kode berikut ke dalam block `{% block content %}` agar data produk dalam bentuk tabel serta tombol *Add New Product* yang akan _redirect_ ke halaman form.
+```html
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Date Added</th>
+        </tr>
+    
+        {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
+    
+        {% for product in products %}
+            <tr>
+                <td>{{product.name}}</td>
+                <td>{{product.amount}}</td>
+                <td>{{product.description}}</td>
+                <td>{{product.date_added}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    <br />
+    
+    <a href="{% url 'main:create_product' %}">
+        <button>
+            Add New Product
+        </button>
+    </a>
+{% endblock content %}
+```
+
+## Tambahkan 5 fungsi views untuk melihat objek yang sudah ditambahkan dalam format HTML, XML, JSON, XML by ID, dan JSON by ID. Serta routing URL untuk masing-masing views yang telah ditambahkan.
+### XML
+1. Buka file `main/views.py`, kemudian import `HttpResponse` dan `Serializer` dan tambahkan function `show_xml`
+```py
+from django.http import HttpResponse
+from django.core import serializers
+...
+def show_xml(request):
+    data = Item.objects.all()
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+```
+> [!NOTE]
+> serializers digunakan untuk translate objek model menjadi format lain.
+
+2. Buka `main/urls.py` untuk import function `show_xml` dan tambahkan routing url ke url patterns sebagai akses menuju fungsi tersebut
+```py
+from main.views import show_main, create_item, show_xml
+...
+urlpatterns = [
+    ...
+    path('xml/', show_xml, name='show_xml'),
+    ...
+]
+```
+
+### JSON
+1. Buka file `views.py` pada folder `main` dan buat fungsi `show_json` yang menerima parameter `request`
+```py
+def show_json(request):
+    data = Item.objects.all()
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+```
+
+2. Buka `urls.py` yang ada pada folder `main` dan import fungsi yang sudah dibuat tadi `(show_json)` dan tambahkan path url ke dalam urlpatterns untuk mengakses fungsi yang diimpor tadi
+```py
+from main.views import show_main, create_item, show_xml, show_json
+...
+urlpatterns = [
+    ...
+    path('json/', show_json, name='show_json'),
+    ...
+]
+```
+
+### XML and JSON by ID
+1. Buka kembali folder `main` dan akses file `urls.py`, kemudian buat function baru, `show_xml_by_id` dan `show_json_by_id` dengan mengembalikan function berupa `HttpResponse` yang berisi parameter data hasil query yang sudah diserialisasi menjadi JSON atau XML dan parameter `content_type`
+```py
+...
+def show_xml_by_id(request, id):
+    data = Item.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
+
+def show_json_by_id(request, id):
+    data = Item.objects.filter(pk=id)
+    return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+...
+```
+
+2. Buka `urls.py` yang ada pada folder `main` dan import fungsi yang sudah dibuat tadi, yaitu `show_xml_by_id` dan `show_json_by_id`, kemudian perbarui path url yang di dalam urlpatterns untuk mengakses kedua fungsi tersebut.
+```py
+from django.urls import path
+from main.views import show_main, create_item, show_xml, show_json, show_xml_by_id, show_json_by_id 
+
+app_name = 'main'
+
+urlpatterns = [
+    path('', show_main, name='show_main'),
+    path('create-item', create_item, name='create_item'),
+    path('xml/', show_xml, name='show_xml'),
+    path('json/', show_json, name='show_json'),
+    path('xml/<int:id>/', show_xml_by_id, name='show_xml_by_id'),
+    path('json/<int:id>/', show_json_by_id, name='show_json_by_id'),
+]
+```
+## Perbedaan antara form POST dan form GET dalam Django
+Terdapat dua jenis method form yang dapat digunakan dalam Django, yaitu POST dan GET. Keduanya memiliki fungsi yang sama, yaitu mengambil data yang diisi user pada form lalu menyimpan data tersebut pada database. Akan tetapi, keduanya memiliki karakteristik masing-masing, yaitu sebagai berikut:
+| **POST** | **GET** |
+| --- | --- |
+| Data pada _form_ akan dibaca dan dilakukan _encode_ kepada data tersebut untuk keperluan transmisi, lalu dikirim secara internal kepada server tanpa menampilkan parameter dari URL. Sehingga data lebih aman karena tidak sembarang orang dapat melakukan akses ke data tersebut. | Data pada form akan dibaca dan dikirim ke server sebagai _string_ yang merupakan parameter URL. Sehingga seluruh data yang dibaca menggunakan method GET bisa terlihat oleh siapapun melalui URL |
+| Sebuah _request_ yang memberikan dampak kepada database dan system harus menggunakan POST | GET digunakan untuk _request_ yang tidak punya pengaruh kepada system. |
+| Cocok digunakan untuk memperoleh _Login Data_ seperti _password_, data yang sangat besar, dan _binary data_ seperti gambar | Cocok digunakan untuk keperluan yang hanya mengakses sesuatu yang sudah ada di website seperti _web search form_. |
+
+## Perbedaan utama antara XML, JSON, dan HTML dalam konteks pengiriman data
+Secara singkat, XML cocok untuk pertukaran data yang sangat terstruktur dan ketat, JSON cocok untuk pertukaran data yang lebih sederhana dan efisien dalam konteks aplikasi web, sedangkan HTML adalah bahasa markup yang digunakan untuk membuat tampilan halaman web yang bisa diakses oleh manusia.
+
+XML adalah bahasa markup yang dirancang untuk menyimpan dan mengirim data dengan struktur yang kuat dan sangat terstruktur. XML menggunakan tag-tag yang mendefinisikan elemen-elemen data dan atribut-atribut untuk memberikan informasi tambahan tentang elemen-elemen tersebut. XML sangat kuat dalam mendefinisikan skema data yang ketat, yang membuatnya cocok untuk pertukaran data yang kompleks seperti data konfigurasi, data yang harus divalidasi dengan ketat, atau dalam format data yang bisa dibaca oleh mesin. Namun, XML memiliki overhead dalam hal ukuran file karena strukturnya yang kuat, dan parsing XML memerlukan penggunaan sumber daya komputasi yang signifikan.
+
+JSON adalah format pertukaran data yang lebih ringan dan mudah dibaca oleh mesin. JSON menggunakan struktur objek dan array yang lebih sederhana daripada XML, membuatnya ideal untuk pertukaran data yang cepat dan efisien. JSON sangat populer dalam pengembangan aplikasi web modern karena dapat diurai (parsed) dan dihasilkan (serialized) dengan mudah dalam banyak bahasa pemrograman. JSON juga mendukung berbagai jenis data, termasuk teks, angka, objek, array, dan boolean, menjadikannya format yang serbaguna untuk pertukaran data antara klien dan server. Namun, JSON tidak memiliki dukungan bawaan untuk definisi skema data yang kuat, yang dapat menyebabkan masalah kompatibilitas jika tidak dikelola dengan baik.
+
+HTML adalah bahasa markup yang dirancang khusus untuk membuat dan mengatur konten web yang dapat diakses oleh manusia melalui peramban web. HTML tidak biasanya digunakan untuk pertukaran data struktural antara aplikasi, tetapi digunakan untuk membuat tampilan dan struktur halaman web. Namun, HTML memiliki kemampuan untuk menyematkan data dalam atribut atau elemen tertentu dan, dengan bantuan JavaScript, data ini dapat diakses oleh aplikasi web dan digunakan untuk interaksi klien-sisi. HTML adalah dasar dari web, dan semua halaman web modern menggunakan HTML sebagai struktur dasarnya.
+
+## Alasan JSON sering digunakan dalam pertukaran data antara aplikasi web modern
+JSON dengan format teks ringan dan fleksibilitas struktur data, memudahkan pengembang dalam memahami, mengelola, dan merepresentasikan data kompleks. Dukungan interoperabilitasnya di banyak bahasa pemrograman dan platform membuatnya serbaguna, digunakan secara luas dalam aplikasi web modern, terutama dalam berinteraksi dengan layanan web dan API eksternal. JSON juga menawarkan fitur keamanan yang mengurangi risiko serangan injeksi kode. Dalam konteks aplikasi real-time, JSON memungkinkan pembaruan data efisien antara klien dan server, meningkatkan pengalaman pengguna. Dukungan luas dari kerangka kerja dan perpustakaan web menjadikannya alat penting dalam pengembangan aplikasi web.
+
+## Screenshot hasil akses URL pada Postman
+### HTML
+![Alt text](tugas3-images/html.png)
+
+### XML
+![Alt text](tugas3-images/xml.png)
+
+### JSON
+![Alt text](tugas3-images/json.png)
+
+### XML by ID (Case ID = 2)
+![Alt text](tugas3-images/xmlbyid.png)
+
+### JSON by ID (Case ID = 1)
+![Alt text](tugas3-images/jsonbyid.png)
+
+## BONUS: Menambahkan pesan "Kamu menyimpan X item pada aplikasi ini" (dengan X adalah jumlah data item yang tersimpan pada aplikasi) dan menampilkannya di atas tabel data.
+Untuk melakukan hal ini, kita perlu mengambil total item yang sudah dibuat di database. tambahkan kode berikut di berkas `views.py` di direktori `main`
+```python
+from main.models import Item  # Import your Product model
+
+# Ubah show_main
+def show_main(request):
+    products = Item.objects.all()
+
+    context = {
+        'name': 'Rizki Ariffudin', # Nama kamu
+        'class': 'PBP E', # Kelas PBP kamu
+        'products': products,
+        'total_items': len(products) # Untuk BONUS, syntax len akan mereturn jumlah products yang ada di database
+    }
+
+    return render(request, "main.html", context)
+```
+Setelah itu, kita ke berkas `main.html` yang ada di direktori `main/templates` dan ubah berkas menjadi sebagai berikut/
+```html
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>Toko Anisa Page</h1>
+
+    <h5>Name:</h5>
+    <p>{{name}}</p>
+
+    <h5>Class:</h5>
+    <p>{{class}}</p>
+    <h5>Kamu menyimpan {{total_items}} item pada aplikasi ini</h5> # Untuk BONUS, tambahkan kode ini untuk menampilkan total items di halaman web
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th>Date Added</th>
+        </tr>
+    
+        {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
+    
+        {% for product in products %}
+            <tr>
+                <td>{{product.name}}</td>
+                <td>{{product.amount}}</td>
+                <td>{{product.description}}</td>
+                <td>{{product.date_added}}</td>
+            </tr>
+        {% endfor %}
+    </table>
+    
+    <br />
+    
+    <a href="{% url 'main:create_product' %}">
+        <button>
+            Add New Product
+        </button>
+    </a>
+{% endblock content %}
+```
