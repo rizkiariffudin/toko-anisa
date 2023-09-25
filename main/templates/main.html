@@ -19,21 +19,42 @@
     
         {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
     
-        {% for product in products %}
+        {% for item in items %}
             <tr>
-                <td>{{product.name}}</td>
-                <td>{{product.amount}}</td>
-                <td>{{product.description}}</td>
-                <td>{{product.date_added}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.amount}}</td>
+                <td>{{item.description}}</td>
+                <td>{{item.date_added}}</td>
+                <td>
+                    <form method="POST" action="{% url 'main:add_amount' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit">+</button>
+                    </form>
+                    <form method="POST" action="{% url 'main:reduce_amount' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit">-</button>
+                    </form>
+                    <form method="POST" action="{% url 'main:remove_item' item.id %}">
+                        {% csrf_token %}
+                        <button type="submit">Remove</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
     </table>
     
     <br />
     
-    <a href="{% url 'main:create_product' %}">
+    <a href="{% url 'main:create_item' %}">
         <button>
-            Add New Product
+            Add New Item
         </button>
     </a>
+
+    <a href="{% url 'main:logout' %}">
+        <button>
+            Logout
+        </button>
+    </a>
+    <h5>Sesi terakhir login: {{ last_login }}</h5>
 {% endblock content %}
