@@ -1,6 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    <!-- As a heading -->
+    <nav class="navbar bg-body-tertiary">
+        <div class="container-fluid">
+        <a class="navbar-brand">Rizki Ariffudin</a>
+            <a href="{% url 'main:logout' %}">
+                <button class="btn btn-outline-danger logout_btn" type="button">Logout</button>
+            </a>
+        </div>
+    </nav>
     <h1>Toko Anisa Page</h1>
 
     <h5>Name:</h5>
@@ -38,6 +47,11 @@
                         {% csrf_token %}
                         <button type="submit">Remove</button>
                     </form>
+                    <a href="{% url 'main:edit_item' item.pk %}">
+                        <button>
+                            Edit
+                        </button>
+                    </a>
                 </td>
             </tr>
         {% endfor %}
