@@ -819,3 +819,125 @@ Penggunaan cookies dalam pengembangan web dapat menjadi aman jika diimplementasi
 3. Regulasi Privasi: Di berbagai yurisdiksi, ada regulasi yang ketat terkait penggunaan cookies, seperti GDPR di Uni Eropa dan CCPA di California. Penggunaan cookies harus mematuhi persyaratan regulasi ini, termasuk memberikan informasi yang jelas tentang penggunaan cookies dan memberikan opsi kepada pengguna untuk menolaknya.
 
 Dalam semua aspek ini, penting bagi pengembang web dan pemilik situs web untuk mempertimbangkan dampak penggunaan cookies pada privasi dan hak pengguna serta untuk mematuhi regulasi yang berlaku. Ini dapat melibatkan pemberian informasi yang transparan tentang penggunaan cookies, memberikan pengguna opsi untuk mengelola cookies, dan mengikuti praktik-praktik keamanan dan privasi sesuai dengan hukum yang berlaku.
+
+# Tugas 5: Desain Web menggunakan HTML, CSS dan Framework CSS
+## Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.
+Element selector adalah bagian penting dalam CSS yang digunakan untuk memilih elemen HTML yang akan diberi gaya atau tampilan. Berikut adalah beberapa jenis selector dan manfaat serta waktu yang tepat untuk menggunakannya.
+### Element selector  
+Akan mengaplikasikan pada sesuai dengan elemen pada berkas html tersebut. Elemen berada pada start tag dan end tag sebuah bagian html. Bermanfaat apabila kita ingin mengganti atribut semua elemen tertentu pada berkas html tersebut.
+### ID selector   
+ID pada css bersifat unique. Yang berarti hanya satu element pada HTML yang memiliki ID tersebut. Kita dapat menggunakan ID selector apabila ingin mengganti sebuah element yang memiliki ID tersebut saja.
+### Class selector  
+Class cukup mirip dengan element apalagi jika menggunakan bootstrap. Namun, Class bisa diaplikasikan pada element yang berbeda. Jadi, element yang berbeda bisa memiliki Class yang sama. Maka dari itu, Class Selector bisa dimanfaatkan apabila ingin mengganti style dari suatu bagian program yang sama atau memiliki fungsi yang sama.
+### Universal selector  
+Selector ini akan mengubah style dari seluruh element yang ada di HTML. Selector ini bagus untuk mengubah style seluruh element pada HTML.
+### Pseudo-class Selector (:pseudo-class)
+Manfaat: Pseudo-class selector digunakan untuk menentukan keadaan atau kondisi khusus elemen, seperti hover, active, atau focus. Ini memungkinkan Anda untuk memberikan respons visual saat pengguna berinteraksi dengan elemen tersebut.
+Waktu yang tepat: Gunakan selector ini untuk memberikan respons visual pada elemen saat pengguna berinteraksi dengan mereka, misalnya mengubah warna teks tombol saat tombol dihover oleh kursor mouse.
+### Selector Pseudo-Element
+Manfaat: Selector pseudo-element memungkinkan Anda memilih bagian-bagian khusus dari elemen, seperti teks yang berada di dalam elemen atau elemen pertama dalam suatu kelompok.
+Waktu yang Tepat: Berguna ketika Anda ingin memberikan gaya pada bagian-bagian khusus dari elemen, seperti mengatur tampilan teks pada elemen.
+
+## Jelaskan HTML5 Tag yang kamu ketahui.
+Daftar Tag HTML5 dapat dilihat pada documentasi HTMLnya. Namun, berikut tag yang menurut saya harus diketahui dan cukup sering digunakan pada pembuatan web.  
+1. `<head>`: Elemen `<head>` digunakan untuk menampung informasi tentang dokumen HTML, seperti meta-data, judul halaman, tautan ke stylesheet eksternal, dan kode JavaScript eksternal. Ini adalah bagian yang terletak di atas elemen `<body>` dan biasanya tidak terlihat oleh pengguna saat mereka mengunjungi halaman web. Elemen `<head>` membantu mesin pencari dan peramban web memahami dan merender halaman dengan benar.
+2. `<nav>`: Tag ini digunakan untuk mengelompokkan elemen-elemen yang berfungsi sebagai menu navigasi, seperti menu utama atau menu pilihan dalam sebuah halaman web.
+3. `<section>`: Tag ini digunakan untuk mengelompokkan konten yang memiliki tema atau topik tertentu. Sebuah halaman web dapat memiliki beberapa elemen `<section>` yang berbeda, seperti bagian pengenalan, bagian berita, atau bagian kontak.
+4. `<main>`: Tag ini digunakan untuk mengidentifikasi konten utama dari halaman web. Hanya satu elemen `<main>` yang boleh ada dalam satu halaman.
+5. `<footer>`: Tag ini digunakan untuk mendefinisikan bagian bawah (footer) dari halaman web. Biasanya, Anda akan menempatkan informasi kontak, hak cipta, atau tautan-tautan penting lainnya di dalam tag ini.
+6. `<a>`: Tag ini digunakan untuk membuat tautan (link) ke halaman web lain atau ke berkas-berkas, seperti dokumen PDF atau gambar.
+7. `<input>`: Tag ini digunakan untuk membuat berbagai jenis elemen input dalam formulir, seperti kotak teks, tombol radio, checkbox, dan banyak lagi.
+8. `<body>`: Elemen `<body>` adalah tempat Anda menempatkan semua konten yang ingin Anda tampilkan kepada pengguna pada halaman web. Ini bisa berupa teks, gambar, video, formulir, dan elemen-elemen lainnya yang akan dilihat dan diinteraksikan oleh pengguna ketika mereka mengunjungi halaman Anda.
+
+##  Jelaskan perbedaan antara margin dan padding.
+Secara letak relatif terhadap border, margin terletak lebih luar dari border dan padding terletak lebih dalam dari border. Border membatasi margin dan padding.   
+Margin menentukan jarak-jarak dengan elemen di luarnya sedangkan padding menentukan jarak antara konten elemen dengan border. Margin tidak mempunyai latar belakang atau warna, sedangkan padding berpengaruh terhadap warna dan latar belakang elemen tersebut.  
+### Margin
+1. Margin adalah ruang di luar batas luar elemen. Dalam kata lain, itu adalah jarak antara elemen dan elemen lain di sekitarnya.
+2. Margin tidak memiliki latar belakang atau warna, dan itu bukan bagian dari elemen itu sendiri. Ini hanya memengaruhi seberapa jauh elemen tersebut berada dari elemen-elemen lain.
+3. Margin digunakan untuk mengendalikan jarak antara elemen dengan elemen lain di luar elemen tersebut.
+4. Margin memiliki pengaruh pada tata letak keseluruhan halaman web.
+Contoh:
+```
+css
+Copy code
+.box {
+  margin: 10px;
+}
+```
+Dalam contoh di atas, elemen dengan kelas "box" akan memiliki margin 10 piksel dari semua sisi (atas, kanan, bawah, dan kiri).
+### Padding
+1. Padding adalah ruang di antara batas elemen dan kontennya sendiri. Ini berada di dalam elemen dan mengatur jarak antara konten elemen dan batasnya.
+2. Padding memiliki latar belakang dan warna yang sama dengan elemen itu sendiri. Ini adalah bagian dari elemen tersebut.
+3. Padding digunakan untuk mengendalikan jarak antara konten elemen dan batas elemen.
+Contoh:
+```
+css
+Copy code
+.box {
+  padding: 10px;
+}
+```
+Dalam contoh di atas, elemen dengan kelas "box" akan memiliki padding 10 piksel di sekeliling kontennya.
+
+##  Jelaskan perbedaan antara framework CSS Tailwind dan Bootstrap. Kapan sebaiknya kita menggunakan Bootstrap daripada Tailwind, dan sebaliknya?
+Ketika memilih framework CSS untuk pengembangan web, seringkali Anda harus mempertimbangkan berbagai faktor seperti kecepatan pengembangan, kemudahan penggunaan, dan fleksibilitas desain. Dua framework CSS populer yang sering dipertimbangkan adalah Tailwind CSS dan Bootstrap. Berikut adalah perbandingan antara keduanya, beserta situasi kapan sebaiknya Anda menggunakan Bootstrap daripada Tailwind, dan sebaliknya.
+
+### Perbedaan Utama
+
+#### 1. Filosofi Desain:
+   - **Bootstrap** memiliki desain yang lebih terstruktur dan bawaan yang lebih lengkap. Ini cocok untuk pengembang yang ingin tampilan yang konsisten dan siap pakai.
+   - **Tailwind CSS** adalah framework yang lebih minimalis dan memberi Anda kendali lebih besar dalam merancang tampilan. Anda harus mendefinisikan gaya Anda sendiri menggunakan kelas yang disediakan.
+
+#### 2. Kelengkapan Komponen:
+   - **Bootstrap** hadir dengan banyak komponen UI bawaan seperti navbar, kartu, dan formulir yang siap pakai.
+   - **Tailwind CSS** lebih fokus pada utilitas dasar seperti margin, padding, dan warna. Anda perlu membangun komponen Anda sendiri.
+
+#### 3. Ukuran:
+   - **Bootstrap** cenderung lebih besar dalam hal ukuran berkas CSS karena banyaknya komponen dan gaya yang telah disiapkan.
+   - **Tailwind CSS** memiliki ukuran berkas yang lebih kecil karena hanya menghasilkan CSS sesuai dengan kebutuhan Anda.
+
+### Kapan Menggunakan Bootstrap?
+   - Ketika Anda ingin mengembangkan situs web dengan cepat tanpa perlu merancang banyak gaya dari awal.
+   - Jika Anda ingin memiliki akses cepat ke banyak komponen UI siap pakai.
+   - Untuk proyek yang memerlukan tampilan yang lebih konsisten dan pola desain yang terdefinisi dengan baik.
+
+### Kapan Menggunakan Tailwind CSS?
+   - Ketika Anda ingin membangun tampilan yang sangat disesuaikan dan tidak terikat pada gaya bawaan.
+   - Jika Anda lebih suka menulis HTML dengan kelas-kelas untuk mengatur tampilan daripada menulis CSS kustom.
+   - Untuk proyek yang memerlukan tampilan yang unik dan tidak ingin terlihat seperti situs web lain yang menggunakan Bootstrap.
+
+### Kesimpulan
+Bootstrap dan Tailwind CSS keduanya merupakan framework yang kuat dengan pendekatan berbeda dalam desain dan penggunaannya. Pilihan antara keduanya tergantung pada kebutuhan dan preferensi Anda. Gunakan Bootstrap jika Anda ingin pengembangan yang cepat dan tampilan yang konsisten. Gunakan Tailwind CSS jika Anda ingin kendali yang lebih besar dalam desain dan tidak keberatan merancang gaya Anda sendiri.
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+1. Menambahkan link sumber dari framework bootstrap ke base.html agar framework bootstrap dapat digunakan pada pengembangan aplikasi
+2. Menambahkan tag `<style>` pada setiap halaman agar tampilan dari web bisa diatur
+3. Saya mengubah implementasi pada `register` `main` `login` `edit_item` dan `create_item` dengan menggunakan tag `<style>` agar dapat dikostumisasi. 
+Untuk `register` `edit_item` dan `create_item` tidak banyak saya ubah, hanya memindahkannya ke bagian tengah dengan kode
+```
+<style>
+    .login {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    h1 {
+        text-align: center;
+    }
+</style>
+```
+Untuk `login` dan `main` saya melakukan cukup banyak perubahan dengan menggunakan class template yang sudah disediakan oleh CSS.
+
+## Implementasi BONUS: Memberikan warna yang berbeda (teks atau background) pada baris terakhir dari item pada inventori anda menggunakan CSS
+Untuk dapat melakukan hal tersebut, kita perlu menambahkan kode di `main.html` dengan kode berikut. 
+```
+<style>
+    ...
+    tr:last-child {
+        background-color: yellow;
+    }
+</style>
+```
+Saya akan melakukan kostumisasi terhadap tag _table row_ dengan tipe _last-child_ atau baris terakhir dari tabel akan saya ubah menjadi warna kuning.

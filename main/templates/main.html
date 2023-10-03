@@ -1,80 +1,93 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <!-- As a heading -->
-    <nav class="navbar bg-body-tertiary">
-        <div class="container-fluid">
-        <a class="navbar-brand">Rizki Ariffudin</a>
-            <a href="{% url 'main:logout' %}">
-                <button class="btn btn-outline-danger logout_btn" type="button">Logout</button>
-            </a>
-        </div>
-    </nav>
-    <h1>Toko Anisa Page</h1>
-    <style>
-        /* Internal style sheet */
-        table tr:last-child {
-          background-color: yellow;
-        }
-      </style>
-
-    <h5>Name:</h5>
-    <p>{{name}}</p>
-
-    <h5>Class:</h5>
-    <p>{{class}}</p>
-    <h5>Kamu menyimpan {{total_items}} item pada aplikasi ini</h5>
-    <table>
-        <tr>
-            <th>Name</th>
-            <th>Amount</th>
-            <th>Description</th>
-            <th>Date Added</th>
-        </tr>
-    
-        {% comment %} Berikut cara memperlihatkan data produk di bawah baris ini {% endcomment %}
-    
-        {% for item in items %}
-            <tr>
-                <td>{{item.name}}</td>
-                <td>{{item.amount}}</td>
-                <td>{{item.description}}</td>
-                <td>{{item.date_added}}</td>
-                <td>
-                    <form method="POST" action="{% url 'main:add_amount' item.id %}">
-                        {% csrf_token %}
-                        <button type="submit">+</button>
-                    </form>
-                    <form method="POST" action="{% url 'main:reduce_amount' item.id %}">
-                        {% csrf_token %}
-                        <button type="submit">-</button>
-                    </form>
-                    <form method="POST" action="{% url 'main:remove_item' item.id %}">
-                        {% csrf_token %}
-                        <button type="submit">Remove</button>
-                    </form>
-                    <a href="{% url 'main:edit_item' item.pk %}">
-                        <button>
-                            Edit
-                        </button>
+<style>
+    /* Change background color of last row */
+    th, td {
+                text-align: center;
+                border: 2px solid black;
+                padding: 8px;
+                width: 25%;
+            }
+    tr:last-child {
+        background-color: yellow;
+    }
+</style>
+    <div class="container">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">Rizki Ariffudin</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ml-auto">
+                    <a href="{% url 'main:logout' %}">
+                        <button class="btn btn-outline-danger logout_btn" type="button">Logout</button>
                     </a>
-                </td>
-            </tr>
-        {% endfor %}
-    </table>
-    
-    <br />
-    
-    <a href="{% url 'main:create_item' %}">
-        <button>
-            Add New Item
-        </button>
-    </a>
+                </ul>
+            </div>
+        </nav>
+        <h1 class="mt-4">Toko Anisa Page</h1>
+        <hr>
+        <div class="row">
+            <div class="col-md-6">
+                <h5>Name:</h5>
+                <p>{{name}}</p>
 
-    <a href="{% url 'main:logout' %}">
-        <button>
+                <h5>Class:</h5>
+                <p>{{class}}</p>
+            </div>
+            <div class="col-md-6">
+                <h5>Kamu menyimpan {{total_items}} item pada aplikasi ini</h5>
+            </div>
+        </div>
+        <hr>
+        
+        <table>
+            <tr>
+                <th>Name</th>
+                <th>Amount</th>
+                <th>Description</th>
+                <th>Date Added</th>
+                <th>Action</th>
+            </tr>
+            {% for item in items %}
+                <tr>
+                    <td>{{item.name}}</td>
+                    <td>{{item.amount}}</td>
+                    <td>{{item.description}}</td>
+                    <td>{{item.date_added}}</td>
+                    <td>
+                        <form method="POST" action="{% url 'main:add_amount' item.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-success">+</button>
+                        </form>
+                        <form method="POST" action="{% url 'main:reduce_amount' item.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-warning">-</button>
+                        </form>
+                        <form method="POST" action="{% url 'main:remove_item' item.id %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
+                        </form>
+                        <a href="{% url 'main:edit_item' item.pk %}">
+                            <button class="btn btn-sm btn-primary">
+                                Edit
+                            </button>
+                        </a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+
+        <a href="{% url 'main:create_item' %}" class="btn btn-primary">
+            Add New Item
+        </a>
+
+        <a href="{% url 'main:logout' %}" class="btn btn-secondary">
             Logout
-        </button>
-    </a>
-    <h5>Sesi terakhir login: {{ last_login }}</h5>
+        </a>
+
+        <h5 class="mt-4">Sesi terakhir login: {{ last_login }}</h5>
+    </div>
 {% endblock content %}
