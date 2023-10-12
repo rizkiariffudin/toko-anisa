@@ -43,46 +43,47 @@
         </div>
         <hr>
         
-        <table>
-            <tr>
-                <th>Name</th>
-                <th>Amount</th>
-                <th>Description</th>
-                <th>Date Added</th>
-                <th>Action</th>
-            </tr>
-            {% for item in items %}
-                <tr>
-                    <td>{{item.name}}</td>
-                    <td>{{item.amount}}</td>
-                    <td>{{item.description}}</td>
-                    <td>{{item.date_added}}</td>
-                    <td>
-                        <form method="POST" action="{% url 'main:add_amount' item.id %}">
+        <table id="item_table"></table>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #FFD24C;">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Item</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="form" onsubmit="return false;">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-success">+</button>
+                            <div class="mb-3">
+                                <label for="name" class="col-form-label">Name:</label>
+                                <input type="text" class="form-control form-color" id="name" name="name"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="amount" class="col-form-label">Amount:</label>
+                                <input type="number" class="form-control form-color" id="amount" name="amount"></input>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="col-form-label">Description:</label>
+                                <textarea class="form-control form-color" id="description" name="description"></textarea>
+                            </div>
                         </form>
-                        <form method="POST" action="{% url 'main:reduce_amount' item.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-warning">-</button>
-                        </form>
-                        <form method="POST" action="{% url 'main:remove_item' item.id %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-sm btn-danger">Remove</button>
-                        </form>
-                        <a href="{% url 'main:edit_item' item.pk %}">
-                            <button class="btn btn-sm btn-primary">
-                                Edit
-                            </button>
-                        </a>
-                    </td>
-                </tr>
-            {% endfor %}
-        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" id="button_close" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-warning" id="button_add" data-bs-dismiss="modal">Add Product</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <a href="{% url 'main:create_item' %}" class="btn btn-primary">
             Add New Item
         </a>
+
+        <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-inline: 10px;">
+            Add Item Using AJAX
+        </button>
 
         <a href="{% url 'main:logout' %}" class="btn btn-secondary">
             Logout
@@ -90,4 +91,91 @@
 
         <h5 class="mt-4">Sesi terakhir login: {{ last_login }}</h5>
     </div>
+
+<script>
+    async function getItems() {
+        return fetch("{% url 'main:get_item_json' %}").then((res) => res.json())
+    }
+
+    async function refreshItems() {
+        document.getElementById("item_table").innerHTML = ""
+        const items = await getItems()
+        let htmlString = `
+        <tr style="text-align: center;">
+            <th style="width: 125px;">Name</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th style="width: 125px;">Date Added</th>
+            <th>Actions</th>
+        </tr>
+        `
+        items.forEach((item) => {
+            htmlString += `
+            <tr>
+                <td>${item.fields.name}</td>
+                <td>${item.fields.amount}</td>
+                <td style="text-align: justify;">${item.fields.description}</td>
+                <td>${item.fields.date_added}</td>
+                <td>
+                    <div class="btn-display">
+                        <a>
+                            <button type="submit" class="btn btn-outline-warning btn-sm edit-item-btn" onclick="addAmount(${item.pk})">+</button>
+                        </a>
+                        <a>
+                            <button type="submit" class="btn btn-outline-warning btn-sm edit-item-btn" onclick="reduceAmount(${item.pk})">-</button>
+                        </a>
+                        <a>
+                            <button type="submit" class="btn btn-outline-danger btn-sm edit-item-btn" onclick="removeItem(${item.pk})">Remove</button>
+                        </a>
+                    </div>
+                </item></td>
+            </tr>
+        `
+        })
+
+        document.getElementById("item_table").innerHTML = htmlString
+    }
+
+    refreshItems()
+
+    function addItem() {
+        fetch("{% url 'main:create-ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshItems)
+
+        document.getElementById("form").reset()
+        return false
+    }
+
+    function addAmount(item_id) {
+        fetch(`add_amount/${item_id}/`, {
+            method: "POST",
+        }).then(refreshItems)
+        return false
+    }
+
+    function reduceAmount(item_id) {
+        fetch(`reduce_amount/${item_id}/`, {
+            method: "POST",
+        }).then(refreshItems)
+        return false
+    }
+
+    function removeItem(item_id) {
+        fetch(`remove_item/${item_id}/`, {
+            method: "DELETE",
+        }).then(refreshItems)
+        return false
+    }
+
+    function closeModal() {
+        document.getElementById("form").reset()
+        return false
+    }
+
+    document.getElementById("button_add").onclick = addItem
+    document.getElementById("button_close").onclick = closeModal
+</script>
+    </script>
 {% endblock content %}
