@@ -4,7 +4,7 @@ Rizki Ariffudin
 2206082612
 PBP E
 
-Tautan menuju aplikasi adaptable Toko Anisa dapat diakses melalui [tautan ini](https://tokoanisa.adaptable.app/main/).
+Tautan menuju aplikasi adaptable Toko Anisa dapat diakses melalui [tautan ini](http://rizki-ariffudin-tugas.pbp.cs.ui.ac.id/).
 
 ## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
 Dalam tugas kali ini, saya menggunakan OS Windows 11, sehingga semua perintah valid untuk versi Windows bukan Linux atau yang lainnya.
@@ -941,3 +941,259 @@ Untuk dapat melakukan hal tersebut, kita perlu menambahkan kode di `main.html` d
 </style>
 ```
 Saya akan melakukan kostumisasi terhadap tag _table row_ dengan tipe _last-child_ atau baris terakhir dari tabel akan saya ubah menjadi warna kuning.
+
+# Tugas 6: JavaScript dan Asynchronous JavaScript
+## Perbedaan Antara _Asynchronous Programming_ dan _Synchronous Programming_
+
+### Synchronous Programming (Program Sinkron)
+- **Eksekusi Berurutan**: Pada pemrograman sinkron, tugas-tugas dieksekusi secara berurutan, satu per satu. Setiap tugas harus menunggu yang sebelumnya selesai sebelum dapat dimulai.
+- **Blocking**: Operasi I/O (Input/Output) yang lambat atau mahal waktu akan menghentikan seluruh program, mengakibatkan waktu tunggu yang lama.
+- **Thread Tidak Efisien**: Untuk mengatasi blokir I/O, Anda mungkin perlu menggunakan thread tambahan, yang dapat menjadi mahal dalam hal penggunaan memori.
+
+### Asynchronous Programming (Program Asinkron)
+- **Eksekusi Non-Berurutan**: Pada pemrograman asinkron, tugas-tugas dapat dieksekusi non-berurutan. Sebuah tugas dapat berlanjut tanpa menunggu yang lain selesai.
+- **Non-Blocking**: Operasi I/O yang lambat atau mahal waktu dapat dilakukan secara non-blokir, sehingga program dapat terus berjalan tanpa menunggu.
+- **Thread Efisien**: Dalam pemrograman asinkron, Anda dapat menggunakan sedikit thread karena Anda tidak perlu membuat thread baru untuk setiap tugas.
+
+### Keuntungan Asynchronous Programming:
+- **Responsif**: Program dapat merespons permintaan atau peristiwa lain tanpa menghentikan tugas utama.
+- **Efisien**: Mengurangi overhead thread dan waktu tunggu yang lama akibat blokir I/O.
+- **Skalabilitas**: Dapat menangani lebih banyak permintaan secara bersamaan tanpa membebani sumber daya.
+
+### Kekurangan Asynchronous Programming:
+- **Kompleksitas**: Memerlukan pemahaman yang lebih mendalam tentang konsep asynchronous dan callback.
+- **Kesulitan Debugging**: Debugging program asinkron dapat lebih sulit karena alur eksekusi tidak selalu berurutan.
+- **Kesalahan Umum**: Kehilangan kontrol atas alur eksekusi dapat menghasilkan kesalahan seperti race condition.
+
+Pemilihan antara synchronous dan asynchronous programming tergantung pada kebutuhan proyek dan performa aplikasi. Synchronous programming lebih sederhana tetapi kurang efisien untuk aplikasi berat. Asynchronous programming memungkinkan performa yang lebih baik dan responsif, tetapi memerlukan pemahaman yang lebih dalam dan berpotensi lebih rumit dalam hal pengembangan dan debugging.
+
+## Paradigma Event-Driven Programming dalam JavaScript dan AJAX
+
+### Maksud Paradigma Event-Driven Programming
+Paradigma event-driven programming adalah pendekatan dalam pengembangan perangkat lunak di mana program merespons peristiwa atau kejadian yang terjadi secara asinkron. Sebaliknya dari pemrograman berurutan (synchronous), di mana alur eksekusi program bergerak dari atas ke bawah, dalam paradigma event-driven, program menunggu peristiwa atau sinyal untuk merespons. Ketika peristiwa tertentu terjadi, program akan menjalankan kode yang terkait dengan peristiwa tersebut.
+
+Dalam konteks JavaScript dan AJAX, paradigma ini digunakan secara luas karena lingkungan web penuh dengan peristiwa yang perlu ditangani, seperti klik mouse, pengiriman formulir, atau respon dari server.
+
+### Contoh Penerapan pada Tugas Ini
+Contoh penerapan paradigma event-driven programming dalam tugas ini adalah penggunaan AJAX untuk mengambil data dari server secara asinkron. Ketika Anda mengirim permintaan AJAX, program JavaScript tidak akan secara berurutan menunggu respons dari server. Sebaliknya, ia akan menunggu peristiwa respons dari server (misalnya, berhasil atau gagal) sebelum melanjutkan eksekusi.
+
+Berikut adalah contoh penerapannya:
+```html
+<a>
+    <button type="submit" class="btn btn-outline-warning btn-sm edit-item-btn" onclick="addAmount(${item.pk})">+</button>
+</a>
+<a>
+    <button type="submit" class="btn btn-outline-warning btn-sm edit-item-btn" onclick="reduceAmount(${item.pk})">-</button>
+</a>
+<a>
+    <button type="submit" class="btn btn-outline-danger btn-sm edit-item-btn" onclick="removeItem(${item.pk})">Remove</button>
+</a>
+```
+
+## Penerapan Asynchronous Programming pada AJAX dengan Fetch
+
+### Asynchronous Programming (Pemrograman Asinkron)
+Asynchronous programming adalah pendekatan dalam pengembangan perangkat lunak di mana operasi-operasi dapat dieksekusi secara independen dan tidak memblokir alur utama program. Ini memungkinkan program untuk melanjutkan eksekusi sementara menunggu operasi-operasi yang memakan waktu, seperti permintaan jaringan atau operasi I/O, untuk selesai.
+
+### Penerapan Asynchronous Programming pada AJAX dengan Fetch
+Fetch adalah API modern yang disediakan oleh JavaScript untuk melakukan permintaan jaringan secara asinkron. Penerapan asynchronous programming dengan Fetch memungkinkan Anda untuk melakukan permintaan ke server tanpa harus memblokir eksekusi program. Berikut adalah penerapan asynchronous programming pada AJAX dengan Fetch:
+
+1. **Menggunakan `fetch()`**: Anda menggunakan fungsi `fetch()` untuk membuat permintaan jaringan. Fungsi ini mengembalikan Promise yang dapat Anda tangani secara asinkron.
+
+2. **Mengatur Callback Function**: Anda dapat menggunakan metode `.then()` pada Promise yang dikembalikan oleh `fetch()` untuk menentukan callback function yang akan dipanggil ketika permintaan selesai atau terjadi kesalahan.
+
+3. **Mengelola Respons**: Dalam callback function, Anda dapat mengelola respons dari server. Anda dapat mengambil dan mengelola data respons, seperti menguraikan JSON atau menampilkan respons pada antarmuka pengguna (UI).
+
+## Perbandingan Fetch API dan jQuery untuk Penerapan AJAX
+
+### Fetch API
+- **Kelebihan:**
+  - **Modern**: Fetch API adalah teknologi yang lebih baru dan telah diintegrasikan secara native ke dalam JavaScript. Ini adalah standar web modern yang terus diperbarui dan didukung oleh sebagian besar peramban.
+  - **Promise-based**: Fetch API menggunakan Promise, yang membuat pengkodean asinkron menjadi lebih mudah dibaca dan dikelola, terutama dengan penggunaan async/await.
+  - **Lebih Ringan**: Fetch API memiliki ukuran berkas yang lebih kecil karena tidak memerlukan perpustakaan tambahan.
+
+- **Kekurangan:**
+  - **Kurva Pembelajaran**: Penggunaan Fetch API memerlukan pemahaman yang lebih mendalam tentang konsep asinkron dan Promise, sehingga mungkin memerlukan waktu bagi pengembang yang kurang berpengalaman.
+  - **Dukungan Browser**: Meskipun semakin mendukung, beberapa peramban yang lebih lama mungkin tidak mendukung Fetch API, yang memerlukan penggunaan polifil atau pemikiran tambahan.
+
+### jQuery
+- **Kelebihan:**
+  - **Kompatibilitas**: jQuery memiliki dukungan yang sangat baik di berbagai peramban, termasuk yang lebih lama. Ini membuatnya menjadi pilihan yang kuat untuk proyek yang harus mendukung peramban kuno.
+  - **Sederhana**: jQuery menyederhanakan kode untuk permintaan AJAX dengan metode seperti `$.ajax()` atau `$.get()`, sehingga cocok untuk pengembang yang ingin melakukan pemrograman dengan sedikit kode.
+
+- **Kekurangan:**
+  - **Mengakibatkan Berat**: jQuery adalah perpustakaan yang cukup besar, dan jika hanya digunakan untuk AJAX, ini bisa menjadi overkill. Ini dapat mempengaruhi kinerja aplikasi karena membawa lebih banyak kode yang tidak diperlukan.
+  - **Tidak Terus Diperbarui**: jQuery cenderung kurang aktif dalam pembaruan dan perkembangan, yang berarti mungkin ada risiko dalam jangka panjang karena kurangnya pembaruan keamanan.
+
+### Pendapat Saya
+Pilihan antara Fetch API dan jQuery untuk penerapan AJAX tergantung pada kebutuhan proyek Anda. Berikut beberapa pertimbangan:
+- **Jika Anda membangun aplikasi modern**: Fetch API adalah pilihan yang baik karena merupakan standar web modern dan mendukung Promise, yang membuat kode lebih bersih dan mudah dikelola.
+- **Jika Anda harus mendukung peramban lama**: jQuery masih merupakan pilihan yang relevan karena kompatibilitasnya yang luas. Ini memungkinkan proyek Anda berjalan lancar di berbagai peramban.
+
+Namun, secara umum, dalam pengembangan aplikasi web modern, Fetch API adalah pilihan yang lebih baik karena lebih ringan, terintegrasi dengan baik dalam JavaScript, dan mendukung standar terbaru. Ini juga membantu menghindari penggunaan perpustakaan yang tidak perlu, seperti jQuery, jika tujuannya hanya untuk AJAX.
+
+## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
+### Membuat fungsi baru pada `views.py` untuk mendapatkan Object dalam bentuk json
+    Fungsi tersebut akan digunakan untuk memberikan data pada `main.html` nanti
+    ```
+    def get_item_json(request):
+        product_item = Item.objects.filter(user=request.user)
+        return HttpResponse(serializers.serialize('json', product_item))
+    ```
+### Membuat fungsi JScript untuk mendapatkan product
+    ```
+    async function getItems() {
+        return fetch("{% url 'main:get_item_json' %}").then((res) => res.json())
+    }
+    ```
+### Membuat fungsi untuk menampilkan semua product pada container nanti
+    ```
+    async function refreshItems() {
+        document.getElementById("item_table").innerHTML = ""
+        const items = await getItems()
+        let htmlString = `
+        <tr style="text-align: center;">
+            <th style="width: 125px;">Name</th>
+            <th>Amount</th>
+            <th>Description</th>
+            <th style="width: 125px;">Date Added</th>
+            <th>Actions</th>
+        </tr>
+        `
+        items.forEach((item) => {
+            htmlString += `
+            <tr>
+                <td>${item.fields.name}</td>
+                <td>${item.fields.amount}</td>
+                <td style="text-align: justify;">${item.fields.description}</td>
+                <td>${item.fields.date_added}</td>
+                <td>
+                    <div class="btn-display">
+                        <a>
+                            <button type="submit" class="btn btn-outline-warning btn-sm edit-item-btn" onclick="addAmount(${item.pk})">+</button>
+                        </a>
+                        <a>
+                            <button type="submit" class="btn btn-outline-warning btn-sm edit-item-btn" onclick="reduceAmount(${item.pk})">-</button>
+                        </a>
+                        <a>
+                            <button type="submit" class="btn btn-outline-danger btn-sm edit-item-btn" onclick="removeItem(${item.pk})">Remove</button>
+                        </a>
+                    </div>
+                </item></td>
+            </tr>
+        `
+        })
+
+        document.getElementById("item_table").innerHTML = htmlString
+    }
+    ```
+### Membuat modal sebagai tempat untuk menambahkan objek baru
+    ```
+    <table id="item_table"></table>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header" style="background-color: #FFD24C;">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Item</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="form" onsubmit="return false;">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="name" class="col-form-label">Name:</label>
+                            <input type="text" class="form-control form-color" id="name" name="name"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="amount" class="col-form-label">Amount:</label>
+                            <input type="number" class="form-control form-color" id="amount" name="amount"></input>
+                        </div>
+                        <div class="mb-3">
+                            <label for="description" class="col-form-label">Description:</label>
+                            <textarea class="form-control form-color" id="description" name="description"></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="button_close" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-warning" id="button_add" data-bs-dismiss="modal">Add Product</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    ```
+### Membuat button untuk menunjukkan modal tersebut
+    ```
+    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal" style="margin-inline: 10px;">
+        Add Item Using AJAX
+    </button>
+    ```
+### Membuat fungsi untuk menambahkan object saat button add product di dalam modal tersebut ditekan
+    ```
+    function addItem() {
+        fetch("{% url 'main:create-ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshItems)
+
+        document.getElementById("form").reset()
+        return false
+    }
+    ```
+### Membuat event listener supaya saat tombol ditekan, hal tersebut akan terdeteksi
+    ```
+    document.getElementById("button_add").onclick = addItem
+    ```
+
+### Melakukan perintah `collectstatic`
+Untuk melakukan perintah collectstatic untuk mengumpulkan file static dari setiap aplikasi di proyek ini, cukup dengan melakukan perintah `python manage.py collectstatic` pada cmd.
+
+## Implementasi Bonus: Menambahkan fungsionalitas hapus dengan menggunakan AJAX DELETE
+### Membuat fungsi baru pada `views.py` untuk mendapatkan Object dalam bentuk json
+    Fungsi tersebut akan digunakan untuk memberikan data pada `main.html` nanti
+    ```
+    @csrf_exempt
+    def remove_item(request, item_id):
+        if request.method == 'DELETE':
+            item = Item.objects.get(pk=item_id)
+            item.user = request.user
+            item.delete()
+            return HttpResponse(b"REMOVED", status=201)
+        return HttpResponseNotFound()
+    ```
+### Membuat fungsi JScript untuk mendapatkan product
+    ```
+    function removeItem(item_id) {
+        fetch(`remove_item/${item_id}/`, {
+            method: "DELETE",
+        }).then(refreshItems)
+        return false
+    }
+    ```
+### Membuat fungsi untuk menampilkan semua product pada container nanti
+    ```
+    async function refreshItems() {
+    ...
+        <a>
+            <button type="submit" class="btn btn-outline-danger btn-sm edit-item-btn" onclick="removeItem(${item.pk})">Remove</button>
+        </a>
+    ...
+    }
+    ```
+
+### Membuat button untuk menunjukkan modal tersebut dengan event listenernya
+    ```
+    <a>
+        <button type="submit" class="btn btn-outline-danger btn-sm edit-item-btn" onclick="removeItem(${item.pk})">Remove</button>
+    </a>
+    ```
+### Membuat fungsi untuk menambahkan object saat button add product di dalam modal tersebut ditekan
+    ```
+    function removeItem(item_id) {
+        fetch(`remove_item/${item_id}/`, {
+            method: "DELETE",
+        }).then(refreshItems)
+        return false
+    }
+    ```
