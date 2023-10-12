@@ -4,7 +4,7 @@ Rizki Ariffudin
 2206082612
 PBP E
 
-Tautan menuju aplikasi adaptable Toko Anisa dapat diakses melalui [tautan ini](https://tokoanisa.adaptable.app/main/).
+Tautan menuju aplikasi adaptable Toko Anisa dapat diakses melalui [tautan ini](http://rizki-ariffudin-tugas.pbp.cs.ui.ac.id/).
 
 ## Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial).
 Dalam tugas kali ini, saya menggunakan OS Windows 11, sehingga semua perintah valid untuk versi Windows bukan Linux atau yang lainnya.
@@ -1144,4 +1144,56 @@ Namun, secara umum, dalam pengembangan aplikasi web modern, Fetch API adalah pil
 ### Membuat event listener supaya saat tombol ditekan, hal tersebut akan terdeteksi
     ```
     document.getElementById("button_add").onclick = addItem
+    ```
+
+### Melakukan perintah `collectstatic`
+Untuk melakukan perintah collectstatic untuk mengumpulkan file static dari setiap aplikasi di proyek ini, cukup dengan melakukan perintah `python manage.py collectstatic` pada cmd.
+
+## Implementasi Bonus: Menambahkan fungsionalitas hapus dengan menggunakan AJAX DELETE
+### Membuat fungsi baru pada `views.py` untuk mendapatkan Object dalam bentuk json
+    Fungsi tersebut akan digunakan untuk memberikan data pada `main.html` nanti
+    ```
+    @csrf_exempt
+    def remove_item(request, item_id):
+        if request.method == 'DELETE':
+            item = Item.objects.get(pk=item_id)
+            item.user = request.user
+            item.delete()
+            return HttpResponse(b"REMOVED", status=201)
+        return HttpResponseNotFound()
+    ```
+### Membuat fungsi JScript untuk mendapatkan product
+    ```
+    function removeItem(item_id) {
+        fetch(`remove_item/${item_id}/`, {
+            method: "DELETE",
+        }).then(refreshItems)
+        return false
+    }
+    ```
+### Membuat fungsi untuk menampilkan semua product pada container nanti
+    ```
+    async function refreshItems() {
+    ...
+        <a>
+            <button type="submit" class="btn btn-outline-danger btn-sm edit-item-btn" onclick="removeItem(${item.pk})">Remove</button>
+        </a>
+    ...
+    }
+    ```
+
+### Membuat button untuk menunjukkan modal tersebut dengan event listenernya
+    ```
+    <a>
+        <button type="submit" class="btn btn-outline-danger btn-sm edit-item-btn" onclick="removeItem(${item.pk})">Remove</button>
+    </a>
+    ```
+### Membuat fungsi untuk menambahkan object saat button add product di dalam modal tersebut ditekan
+    ```
+    function removeItem(item_id) {
+        fetch(`remove_item/${item_id}/`, {
+            method: "DELETE",
+        }).then(refreshItems)
+        return false
+    }
     ```
