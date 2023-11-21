@@ -64,6 +64,7 @@ def show_json_by_id(request, id):
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
 # Create your views here.
 
+@csrf_exempt
 def register(request):
     form = UserCreationForm()
 
@@ -76,6 +77,7 @@ def register(request):
     context = {'form':form}
     return render(request, 'register.html', context)
 
+@csrf_exempt
 def login_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -91,6 +93,7 @@ def login_user(request):
     context = {}
     return render(request, 'login.html', context)
 
+@csrf_exempt
 def logout_user(request):
     logout(request)
     response = HttpResponseRedirect(reverse('main:login'))
@@ -129,6 +132,7 @@ def remove_item(request, item_id):
         return HttpResponse(b"REMOVED", status=201)
     return HttpResponseNotFound()
 
+@csrf_exempt
 def edit_item(request, id):
     # Get item berdasarkan ID
     item = Item.objects.get(pk = id)
@@ -144,6 +148,7 @@ def edit_item(request, id):
     context = {'form': form}
     return render(request, "edit_item.html", context)
 
+@csrf_exempt
 def get_item_json(request):
     product_item = Item.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize('json', product_item))
